@@ -10,11 +10,13 @@ import android.view.SurfaceView;
 /**
  * Created by joseph.gallahan on 2/8/2017.
  */
+
 public class GameView extends SurfaceView implements Runnable
 {
     boolean mPlaying;
     private Thread mGameThread = null;
 
+    private World mWorld;
     private Player mPlayer;
 
     //Drawing
@@ -25,6 +27,9 @@ public class GameView extends SurfaceView implements Runnable
     public GameView(Context context)
     {
         super(context);
+
+        //Make the world
+        mWorld = new World(context);
 
         //Init player
         mPlayer = new Player(context);
@@ -49,6 +54,7 @@ public class GameView extends SurfaceView implements Runnable
     private void update()
     {
         mPlayer.update();
+        mWorld.update();
     }
 
     //Draw the frame
@@ -68,6 +74,7 @@ public class GameView extends SurfaceView implements Runnable
                      mPlayer.getX(),
                      mPlayer.getY(),
                      mPaint);
+            mWorld.draw(mCanvas, mPaint);
             //Unlock the canvas
             mSurfaceHolder.unlockCanvasAndPost(mCanvas);
         }

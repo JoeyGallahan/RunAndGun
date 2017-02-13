@@ -12,6 +12,7 @@ public class Player
     //Dimensions & Collision
     float mWidth, mHeight;
     Bitmap mImage;
+
    // BoundingBox mBoundingBox;
 
     //Movement
@@ -54,5 +55,8 @@ public class Player
     //Mutators
 
     //Gameplay
-    public void update(){}
+    public void update()
+    {
+
+    }
 }

@@ -22,7 +22,7 @@ public class GroundBlock
 
         mHeight = 100;
 
-        int x, y = ((Activity)context).getWindowManager().getDefaultDisplay().getHeight() - mHeight;;
+        int x, y = ((Activity)context).getWindowManager().getDefaultDisplay().getHeight() - mHeight;
 
         if (isVisible)
             x = 10;

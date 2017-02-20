@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Queue;
 
 /**
@@ -12,6 +14,7 @@ import java.util.Queue;
 public class WorldChunk
 {
     private GroundBlock mGround;
+    private ArrayList<Obstacle> mObstacles;
     private boolean mVisible;
 
     public WorldChunk(Context context, boolean isVisible)
@@ -19,10 +22,18 @@ public class WorldChunk
         mVisible = isVisible;
 
         mGround = new GroundBlock(context, isVisible);
+
+        mObstacles = new ArrayList<Obstacle>();
+        mObstacles.add(new Block(context));
     }
 
     public void update()
     {
+        for (int i = 0; i < mObstacles.size(); i++)
+        {
+            mObstacles.get(i).update();
+        }
+
         mGround.update();
     }
 
@@ -32,6 +43,11 @@ public class WorldChunk
                           mGround.getX(),
                           mGround.getY(),
                           paint);
+
+        for (int i = 0; i < mObstacles.size(); i++)
+        {
+            mObstacles.get(i).draw(canvas, paint);
+        }
     }
 
 }

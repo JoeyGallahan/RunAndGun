@@ -16,6 +16,8 @@ public abstract class Obstacle
     protected Vector2d mLocation;
     protected Bitmap mImage;
     protected Context mContext;
+    protected BoundingBox mBoundingBox;
+
 
     public Obstacle(){}
 
@@ -36,5 +38,10 @@ public abstract class Obstacle
                 mLocation.getX(),
                 mLocation.getY(),
                 paint);
+    }
+
+    public BoundingBox getBoundingBox()
+    {
+        return mBoundingBox;
     }
 }

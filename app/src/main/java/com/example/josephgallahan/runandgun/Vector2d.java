@@ -1,5 +1,7 @@
 package com.example.josephgallahan.runandgun;
 
+import java.util.Vector;
+
 /**
  * Created by joseph.gallahan on 2/8/2017.
  */
@@ -41,5 +43,21 @@ public class Vector2d
     {
         mX = x;
         mY = y;
+    }
+
+    public Vector2d add(float x, float y)
+    {
+        mX += x;
+        mY += y;
+
+        return this;
+    }
+
+    public Vector2d sub(float x, float y)
+    {
+        mX -= x;
+        mY -= y;
+
+        return this;
     }
 }

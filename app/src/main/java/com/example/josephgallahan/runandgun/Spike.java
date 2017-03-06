@@ -2,20 +2,19 @@ package com.example.josephgallahan.runandgun;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.location.Location;
 
 import java.util.Random;
 
 /**
- * Created by joseph.gallahan on 2/20/2017.
+ * Created by Joey on 3/4/2017.
  */
-public class Block extends Obstacle
+
+public class Spike extends Obstacle
 {
-    public Block(Context context)
+    public Spike(Context context)
     {
         setContext(context);
-        setImage(R.drawable.obstacle_block);
+        setImage(R.drawable.obstacle_spike);
         spawn();
     }
 

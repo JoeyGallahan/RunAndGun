@@ -7,6 +7,9 @@ import android.graphics.Paint;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Queue;
+import java.util.Random;
+
+import static java.lang.Math.abs;
 
 /**
  * Created by joseph.gallahan on 2/13/2017.
@@ -24,7 +27,33 @@ public class WorldChunk
         mGround = new GroundBlock(context, isVisible);
 
         mObstacles = new ArrayList<Obstacle>();
-        mObstacles.add(new Block(context));
+    }
+
+    public ArrayList<Obstacle> getObstacles()
+    {
+        return mObstacles;
+    }
+
+    public void addObstacles()
+    {
+        Random r = new Random();
+        for (int i = 0; i < 3; i++)
+        {
+            float yea = r.nextFloat();
+            if (yea <= 0.3)
+            {
+                mObstacles.add(new Spike(World.getInstance().getContext()));
+            }
+            else
+            {
+                mObstacles.add(new Block(World.getInstance().getContext()));
+            }
+        }
+    }
+
+    public boolean isVisible()
+    {
+        return mVisible;
     }
 
     public void update()
@@ -35,6 +64,18 @@ public class WorldChunk
         }
 
         mGround.update();
+
+        if (abs(mGround.getX() - mGround.getImage().getWidth()) <= 10 && !mVisible)
+        {
+            mVisible = true;
+            addObstacles();
+        }
+        if (mGround.getX() + mGround.getImage().getWidth() <= 0)
+        {
+            mVisible = false;
+            setX(mGround.getImage().getWidth() * 2);
+            mObstacles.clear();
+        }
     }
 
     public void draw(Canvas canvas, Paint paint)
@@ -48,6 +89,16 @@ public class WorldChunk
         {
             mObstacles.get(i).draw(canvas, paint);
         }
+    }
+
+    public GroundBlock getGround()
+    {
+        return mGround;
+    }
+
+    public void setX(float x)
+    {
+        mGround.setX(x);
     }
 
 }

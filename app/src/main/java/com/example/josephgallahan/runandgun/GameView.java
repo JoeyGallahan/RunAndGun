@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -16,7 +17,6 @@ public class GameView extends SurfaceView implements Runnable
     boolean mPlaying;
     private Thread mGameThread = null;
 
-    private World mWorld;
     private Player mPlayer;
 
     //Drawing
@@ -28,8 +28,9 @@ public class GameView extends SurfaceView implements Runnable
     {
         super(context);
 
-        //Make the world
-        mWorld = new World(context);
+        World.getInstance();
+        World.getInstance().setContext(context);
+        World.getInstance().init();
 
         //Init player
         mPlayer = new Player(context);
@@ -54,7 +55,7 @@ public class GameView extends SurfaceView implements Runnable
     private void update()
     {
         mPlayer.update();
-        mWorld.update();
+        World.getInstance().update();
     }
 
     //Draw the frame
@@ -69,12 +70,8 @@ public class GameView extends SurfaceView implements Runnable
             //Draw Background color
             mCanvas.drawColor(Color.GRAY);
             //Draw the player
-            mCanvas.drawBitmap
-                    (mPlayer.getImage(),
-                     mPlayer.getX(),
-                     mPlayer.getY(),
-                     mPaint);
-            mWorld.draw(mCanvas, mPaint);
+            mPlayer.draw(mCanvas, mPaint);
+            World.getInstance().draw(mCanvas, mPaint);
             //Unlock the canvas
             mSurfaceHolder.unlockCanvasAndPost(mCanvas);
         }
@@ -112,4 +109,28 @@ public class GameView extends SurfaceView implements Runnable
         mGameThread = new Thread(this);
         mGameThread.start();
     }
+
+    //Touch events
+    @Override
+    public boolean onTouchEvent(MotionEvent event)
+    {
+        int action = event.getAction();
+
+        if (action == MotionEvent.ACTION_DOWN)
+        {
+            if (event.getX() <= World.getInstance().getWidth() / 2)
+                mPlayer.shoot();
+            else
+            {
+                if (event.getY() <= World.getInstance().getHeight() / 2)
+                    mPlayer.startJump();
+                else
+                    mPlayer.slide();
+            }
+        }
+
+
+        return super.onTouchEvent(event);
+    }
+
 }

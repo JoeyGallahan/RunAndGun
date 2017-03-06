@@ -17,7 +17,7 @@ public abstract class Obstacle
     protected Bitmap mImage;
     protected Context mContext;
     protected BoundingBox mBoundingBox;
-
+    protected Vector2d mSpawnZone;
 
     public Obstacle(){}
 
@@ -28,6 +28,7 @@ public abstract class Obstacle
         mImage = BitmapFactory.decodeResource(mContext.getResources(), drawableID);
     }
     public void setLocation(Vector2d loc) {mLocation = loc;}
+    public void setSpawnZone(Vector2d loc) {mSpawnZone = loc;}
 
     protected abstract void spawn();
     protected abstract void update();

@@ -12,10 +12,11 @@ import java.util.Random;
  */
 public class Block extends Obstacle
 {
-    public Block(Context context)
+    public Block(Context context, GroundBlock block)
     {
         setContext(context);
         setImage(R.drawable.obstacle_block);
+        setSpawnZone(block.getLocation());
         spawn();
     }
 
@@ -23,7 +24,7 @@ public class Block extends Obstacle
     {
         Random r = new Random();
 
-        int x = r.nextInt(((Activity)getContext()).getWindowManager().getDefaultDisplay().getWidth() - 120) + 120 ;
+        int x = r.nextInt(World.getInstance().getWidth())+ (int)mSpawnZone.getX() + 50;
         float y = World.getInstance().getGround().getY() - mImage.getHeight();
 
         setLocation(new Vector2d(x,y));

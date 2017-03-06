@@ -42,11 +42,11 @@ public class WorldChunk
             float yea = r.nextFloat();
             if (yea <= 0.3)
             {
-                mObstacles.add(new Spike(World.getInstance().getContext()));
+                mObstacles.add(new Spike(World.getInstance().getContext(), getGround()));
             }
             else
             {
-                mObstacles.add(new Block(World.getInstance().getContext()));
+                mObstacles.add(new Block(World.getInstance().getContext(), getGround()));
             }
         }
     }

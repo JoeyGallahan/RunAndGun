@@ -11,10 +11,11 @@ import java.util.Random;
 
 public class Spike extends Obstacle
 {
-    public Spike(Context context)
+    public Spike(Context context, GroundBlock block)
     {
         setContext(context);
         setImage(R.drawable.obstacle_spike);
+        setSpawnZone(block.getLocation());
         spawn();
     }
 
@@ -22,7 +23,7 @@ public class Spike extends Obstacle
     {
         Random r = new Random();
 
-        int x = r.nextInt(((Activity)getContext()).getWindowManager().getDefaultDisplay().getWidth() - 120) + 120 ;
+        int x = r.nextInt(World.getInstance().getWidth())+ (int)mSpawnZone.getX() + 50;
         float y = World.getInstance().getGround().getY() - mImage.getHeight();
 
         setLocation(new Vector2d(x,y));

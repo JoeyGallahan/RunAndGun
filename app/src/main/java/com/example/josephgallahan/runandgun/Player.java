@@ -16,14 +16,15 @@ public class Player
 {
     //Dimensions & Collision
     Bitmap mImage;
+    Bitmap mScaledImage;
 
     BoundingBox mBoundingBox;
 
-
     //Movement
     Vector2d mLocation;
-    final float mSpeed = -50.0f, mGravity = 15.0f;
+    final float mSpeed = -50.0f, mGravity = 10.0f;
     float mVel = 0.0f;
+    int mWidth, mHeight;
 
     //Actions
     Boolean mIsJumping = false, mCanShoot = true, mCanSlide = true;
@@ -32,20 +33,29 @@ public class Player
     Bullet bullet;
 
     //Other
+    int mFrameCounter;
     int mScore;
+
+    boolean collidedWithObstacle = false;
 
     public Player(Context context)
     {
+        mWidth = 200;
+        mHeight = 200;
+
         mImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.player);
-        mLocation = new Vector2d(50, World.getInstance().getGround().getY() - mImage.getHeight());
-        mBoundingBox = new BoundingBox(mImage.getWidth(), mImage.getHeight(), mLocation);
-        //
+        mScaledImage = Bitmap.createScaledBitmap(mImage, mWidth, mHeight, true);
+
+        mLocation = new Vector2d(50, World.getInstance().getGround().getY() - mImage.getHeight() - 10);
+        mBoundingBox = new BoundingBox(mWidth, mHeight, mLocation);
+        mScore = 0;
+        mFrameCounter = 0;
     }
 
     //Accessors
     public Bitmap getImage()
     {
-        return mImage;
+        return mScaledImage;
     }
     public Vector2d getLocation()
     {
@@ -62,12 +72,11 @@ public class Player
 
     //Mutators
 
-
-
     public void startJump()
     {
         if (!mIsJumping && mCanSlide)
         {
+            mIsJumping = true;
             Log.d("Jumping", "yay");
             mIsJumping = true;
             mVel = mSpeed * 2;
@@ -81,6 +90,7 @@ public class Player
         if (mCanSlide)
         {
             mImage = BitmapFactory.decodeResource(World.getInstance().getContext().getResources(), R.drawable.player_slide);
+            mScaledImage = Bitmap.createScaledBitmap(mImage, mWidth, mHeight, true);
             mCanSlide = false;
         }
 
@@ -90,7 +100,7 @@ public class Player
     {
         if (mCanShoot)
         {
-            bullet = new Bullet(mLocation.getX() + getImage().getWidth() / 2, mLocation.getY() + getImage().getHeight() / 2);
+            bullet = new Bullet(mLocation.getX() + mWidth / 2, mLocation.getY() + mHeight / 2);
             mCanShoot = false;
         }
     }
@@ -98,39 +108,47 @@ public class Player
     //Gameplay
     public void update()
     {
-        boolean collidedWithObstacle = false;
+        mFrameCounter++;
+
+        if(mFrameCounter == 60)
+        {
+            mScore+=10;
+            mFrameCounter = 0;
+        }
 
         for (int i = 0; i < World.getInstance().getNumVisibleObstacles(); i++)
         {
             if (mBoundingBox.checkCollision(World.getInstance().getVisibleObstacles().get(i).getBoundingBox()))
             {
-                //collidedWithObstacle = true;
+                collidedWithObstacle = true;
                 //Log.d("Collision", String.valueOf(i));
-                //mVel = 0.0f;
+              //  mVel = 0.0f;
             }
         }
-        if (!collidedWithObstacle)
-        {
-            if (!mBoundingBox.checkCollision(World.getInstance().getGround().getBoundingBox()))
+
+       // if (!collidedWithObstacle)
+       // {
+            if(mIsJumping && !mBoundingBox.checkCollision(World.getInstance().getGround().getBoundingBox()))
             {
                 mVel += mGravity;
                 mLocation.add(0.0f, mVel);
                 mBoundingBox.updateBox(mLocation);
-                mIsJumping = true;
+
             }
             else
             {
                 mVel = 0.0f;
-                mLocation.setY(World.getInstance().getGround().getY() - mImage.getHeight());
+                mLocation.setY(World.getInstance().getGround().getY() - mHeight);
                 mIsJumping = false;
             }
-        }
+     //   }
 
         if (mSlidingFrames >= 30)
         {
             mSlidingFrames = 0;
             mCanSlide = true;
             mImage = BitmapFactory.decodeResource(World.getInstance().getContext().getResources(), R.drawable.player);
+            mScaledImage = Bitmap.createScaledBitmap(mImage, mWidth, mHeight, true);
         }
         if (!mCanSlide)
         {
@@ -142,10 +160,21 @@ public class Player
             if (bullet.getX() >= World.getInstance().getWidth())
             {
                 mCanShoot = true;
+                bullet = null;
             }
             else
             {
                 bullet.update();
+                if (!World.getInstance().getEnemies().isEmpty())
+                {
+                    if (bullet.checkCollision(World.getInstance().getEnemies().get(0).getBoundingBox()))
+                    {
+                        mCanShoot = true;
+                        bullet = null;
+                        World.getInstance().getEnemies().remove(0);
+                        mScore += 50;
+                    }
+                }
             }
         }
 
@@ -154,10 +183,26 @@ public class Player
 
     public void draw(Canvas canvas, Paint paint)
     {
-        canvas.drawBitmap(mImage,
+        canvas.drawBitmap(getImage(),
                 mLocation.getX(),
                 mLocation.getY(),
                 paint);
+
+        paint.setTextSize(100.0f);
+        canvas.drawText("Score: " + mScore, 50.0f, 100.0f, paint);
+
+        if (!World.getInstance().getEnemies().isEmpty())
+        {
+            if (mBoundingBox.checkCollision(World.getInstance().getEnemies().get(0).getBoundingBox())) {
+                canvas.drawText("R.I.P. Enemy Killed you", World.getInstance().getWidth() / 2.0f, 100.0f, paint);
+            }
+        }
+
+        if (collidedWithObstacle)
+        {
+            canvas.drawText("R.I.P. Obstacle killed you", World.getInstance().getWidth() / 2.0f, 200.0f, paint);
+            collidedWithObstacle = false;
+        }
 
         if (bullet != null)
             bullet.draw(canvas, paint);

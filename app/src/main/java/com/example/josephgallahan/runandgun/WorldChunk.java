@@ -40,13 +40,17 @@ public class WorldChunk
         for (int i = 0; i < 3; i++)
         {
             float yea = r.nextFloat();
-            if (yea <= 0.3)
+            if (yea <= 0.3333f)
             {
                 mObstacles.add(new Spike(World.getInstance().getContext(), getGround()));
             }
-            else
+            else if (yea <= 0.6666f)
             {
                 mObstacles.add(new Block(World.getInstance().getContext(), getGround()));
+            }
+            else
+            {
+                mObstacles.add(new Lava(World.getInstance().getContext(), getGround()));
             }
         }
     }

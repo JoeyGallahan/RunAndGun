@@ -18,6 +18,7 @@ public class World
     private WorldChunk[] mWorldChunks;
     private static World mInstace = null;
     private Context mContext;
+    private ArrayList<Enemy> mEnemies;
 
     private int mSpeed = -10;
 
@@ -56,6 +57,8 @@ public class World
     public void init()
     {
         mWorldChunks = new WorldChunk[3];
+        mEnemies = new ArrayList<>();
+
         boolean visible = true;
 
         for (int i = 0; i < 3; i++)
@@ -73,6 +76,8 @@ public class World
 
             mWorldChunks[i].addObstacles();
         }
+
+        mEnemies.add(new Enemy(mContext));
     }
 
     public void update()
@@ -80,6 +85,18 @@ public class World
         for (int i = 0; i < 3; i++)
         {
             mWorldChunks[i].update();
+        }
+        if (!mEnemies.isEmpty())
+        {
+            mEnemies.get(0).update();
+            if (mEnemies.get(0).getX() <= 0)
+            {
+                mEnemies.remove(0);
+            }
+        }
+        else
+        {
+            mEnemies.add(new Enemy(mContext));
         }
     }
 
@@ -91,7 +108,10 @@ public class World
             {
                 mWorldChunks[i].draw(canvas, paint);
             }
-
+        }
+        if (!mEnemies.isEmpty())
+        {
+            mEnemies.get(0).draw(canvas, paint);
         }
     }
 
@@ -106,6 +126,8 @@ public class World
         }
         return mWorldChunks[0].getGround();
     }
+
+    public ArrayList<Enemy> getEnemies(){return mEnemies;}
 
     public int getSpeed()
     {

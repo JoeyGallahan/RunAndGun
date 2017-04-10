@@ -1,21 +1,19 @@
 package com.example.josephgallahan.runandgun;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.location.Location;
 
 import java.util.Random;
 
 /**
- * Created by joseph.gallahan on 2/20/2017.
+ * Created by Joey on 4/9/2017.
  */
-public class Block extends Obstacle
+
+public class Lava extends Obstacle
 {
-    public Block(Context context, GroundBlock block)
+    public Lava(Context context, GroundBlock block)
     {
         setContext(context);
-        setImage(R.drawable.obstacle_block);
+        setImage(R.drawable.lava);
         setSpawnZone(block.getLocation());
         spawn();
     }
@@ -25,7 +23,7 @@ public class Block extends Obstacle
         Random r = new Random();
 
         int x = r.nextInt(World.getInstance().getWidth())+ (int)mSpawnZone.getX() + 50;
-        float y = World.getInstance().getGround().getY() - mImage.getHeight();
+        float y = World.getInstance().getGround().getY();
 
         setLocation(new Vector2d(x,y));
 
@@ -35,14 +33,5 @@ public class Block extends Obstacle
     {
         mLocation.add(World.getInstance().getSpeed(), 0.0f);
         mBoundingBox.updateBox(mLocation);
-
-        if (mBoundingBox.canCollide())
-        {
-            setImage(R.drawable.obstacle_block_collidable);
-        }
-        else
-        {
-            setImage(R.drawable.obstacle_block);
-        }
     }
 }

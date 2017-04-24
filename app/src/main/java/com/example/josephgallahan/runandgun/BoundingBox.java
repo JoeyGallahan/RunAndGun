@@ -1,5 +1,10 @@
 package com.example.josephgallahan.runandgun;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.util.Log;
 import android.widget.TwoLineListItem;
 
@@ -15,8 +20,10 @@ public class BoundingBox
     private Vector2d mLocation;
     private float mLeft, mRight, mTop, mBot;
     private Boolean mCanCollide;
+    Bitmap mImage;
+    Bitmap mScaledImage;
 
-    public BoundingBox(float width, float height, Vector2d loc)
+    public BoundingBox(Context context, float width, float height, Vector2d loc)
     {
         mWidth = width;
         mHeight = height;
@@ -29,6 +36,9 @@ public class BoundingBox
         mRight = mLocation.getX() + mWidth;
         mTop =   mLocation.getY();
         mBot =   mLocation.getY() + mHeight;
+
+        mImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.bounding_box);
+        mScaledImage = Bitmap.createScaledBitmap(mImage, (int)mWidth, (int)mHeight, true);
     }
 
     public Boolean canCollide()
@@ -89,5 +99,12 @@ public class BoundingBox
         {
             mCanCollide = false;
         }
+    }
+    public void draw(Canvas canvas, Paint paint)
+    {
+       /* canvas.drawBitmap(mScaledImage,
+                mLocation.getX(),
+                mLocation.getY(),
+                paint);*/
     }
 }

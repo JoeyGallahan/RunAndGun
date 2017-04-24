@@ -22,21 +22,23 @@ public class Player
 
     //Movement
     Vector2d mLocation;
-    final float mSpeed = -50.0f, mGravity = 10.0f;
+    final float mSpeed = -50.0f, mGravity = 5.0f;
     float mVel = 0.0f;
     int mWidth, mHeight;
 
     //Actions
-    Boolean mIsJumping = false, mCanShoot = true, mCanSlide = true;
-    float mShootCooldown;
+    Boolean mIsJumping = false, mCanShoot = true, mCanSlide = true, mDrawStyle = false;
     int mSlidingFrames = 0;
     Bullet bullet;
+
+    float styleSize = 200.0f;
 
     //Other
     int mFrameCounter;
     int mScore;
 
     boolean collidedWithObstacle = false;
+    boolean goodCollision = false;
 
     public Player(Context context)
     {
@@ -47,7 +49,7 @@ public class Player
         mScaledImage = Bitmap.createScaledBitmap(mImage, mWidth, mHeight, true);
 
         mLocation = new Vector2d(50, World.getInstance().getGround().getY() - mImage.getHeight() - 10);
-        mBoundingBox = new BoundingBox(mWidth, mHeight, mLocation);
+        mBoundingBox = new BoundingBox(context, mWidth, mHeight, mLocation);
         mScore = 0;
         mFrameCounter = 0;
     }
@@ -100,7 +102,7 @@ public class Player
     {
         if (mCanShoot)
         {
-            bullet = new Bullet(mLocation.getX() + mWidth / 2, mLocation.getY() + mHeight / 2);
+            bullet = new Bullet(mLocation.getX() + mWidth / 2, mLocation.getY() + mHeight / 2, !mCanSlide);
             mCanShoot = false;
         }
     }
@@ -116,24 +118,39 @@ public class Player
             mFrameCounter = 0;
         }
 
+        if (mCanSlide && (mFrameCounter == 20 || mFrameCounter == 40 || mFrameCounter == 60 || mFrameCounter == 0))
+        {
+            mImage = BitmapFactory.decodeResource(World.getInstance().getContext().getResources(), R.drawable.player_2);
+            mScaledImage = Bitmap.createScaledBitmap(mImage, mWidth, mHeight, true);
+        }
+
+        if (mCanSlide && (mFrameCounter == 10 || mFrameCounter == 30 || mFrameCounter == 50))
+        {
+            mImage = BitmapFactory.decodeResource(World.getInstance().getContext().getResources(), R.drawable.player);
+            mScaledImage = Bitmap.createScaledBitmap(mImage, mWidth, mHeight, true);
+        }
+
         for (int i = 0; i < World.getInstance().getNumVisibleObstacles(); i++)
         {
             if (mBoundingBox.checkCollision(World.getInstance().getVisibleObstacles().get(i).getBoundingBox()))
             {
                 collidedWithObstacle = true;
                 //Log.d("Collision", String.valueOf(i));
-              //  mVel = 0.0f;
+                mVel = 0.0f;
+                mIsJumping = false;
+
+                if (World.getInstance().getVisibleObstacles().get(i).isGood())
+                    goodCollision = true;
             }
         }
 
-       // if (!collidedWithObstacle)
-       // {
-            if(mIsJumping && !mBoundingBox.checkCollision(World.getInstance().getGround().getBoundingBox()))
+        if (!collidedWithObstacle)
+        {
+            if((mIsJumping || getY() < World.getInstance().getGround().getY() - mHeight) && !mBoundingBox.checkCollision(World.getInstance().getGround().getBoundingBox()))
             {
                 mVel += mGravity;
                 mLocation.add(0.0f, mVel);
                 mBoundingBox.updateBox(mLocation);
-
             }
             else
             {
@@ -141,7 +158,7 @@ public class Player
                 mLocation.setY(World.getInstance().getGround().getY() - mHeight);
                 mIsJumping = false;
             }
-     //   }
+        }
 
         if (mSlidingFrames >= 30)
         {
@@ -170,9 +187,14 @@ public class Player
                     if (bullet.checkCollision(World.getInstance().getEnemies().get(0).getBoundingBox()))
                     {
                         mCanShoot = true;
+                        mDrawStyle = bullet.wasSlideShot();
                         bullet = null;
                         World.getInstance().getEnemies().remove(0);
-                        mScore += 50;
+
+                        if (!mDrawStyle)
+                            mScore += 50;
+                        else
+                            mScore += 80;
                     }
                 }
             }
@@ -198,13 +220,34 @@ public class Player
             }
         }
 
-        if (collidedWithObstacle)
+        if (collidedWithObstacle && !goodCollision)
         {
             canvas.drawText("R.I.P. Obstacle killed you", World.getInstance().getWidth() / 2.0f, 200.0f, paint);
-            collidedWithObstacle = false;
         }
 
         if (bullet != null)
             bullet.draw(canvas, paint);
+
+        if (mDrawStyle)
+        {
+            if (styleSize < 300.0f)
+            {
+                paint.setTextSize(styleSize);
+
+                canvas.drawText("~STYLE POINTS~", World.getInstance().getWidth() / 4.0f - styleSize, World.getInstance().getHeight() / 1.50f, paint);
+
+                styleSize += 5.0f;
+            }
+            else
+            {
+                mDrawStyle = false;
+                styleSize = 200.0f;
+            }
+        }
+
+        mBoundingBox.draw(canvas, paint);
+
+        collidedWithObstacle = false;
+        goodCollision = false;
     }
 }

@@ -27,7 +27,7 @@ public class Lava extends Obstacle
 
         setLocation(new Vector2d(x,y));
 
-        mBoundingBox = new BoundingBox(mImage.getWidth(), mImage.getHeight(), mLocation);
+        mBoundingBox = new BoundingBox(World.getInstance().getContext(),mImage.getWidth(), mImage.getHeight(), mLocation);
     }
     protected void update()
     {

@@ -17,18 +17,22 @@ public class Bullet
     private Bitmap mImage;
     private BoundingBox mBoundingBox;
     private float mSpeed = 100.0f;
+    private boolean mSlideShot;
 
-    public Bullet(float x, float y)
+    public Bullet(float x, float y, boolean slideShot)
     {
         mImage = BitmapFactory.decodeResource(World.getInstance().getContext().getResources(), R.drawable.bullet);
         mLocation = new Vector2d(x, y);
-        mBoundingBox = new BoundingBox(mImage.getWidth(), mImage.getHeight(), mLocation);
+        mBoundingBox = new BoundingBox(World.getInstance().getContext(), mImage.getWidth(), mImage.getHeight(), mLocation);
+        mSlideShot = slideShot;
     }
 
     public float getX()
     {
         return mLocation.getX();
     }
+
+    public boolean wasSlideShot(){return mSlideShot;}
 
 
     public void update()
@@ -48,6 +52,7 @@ public class Bullet
                 mLocation.getX(),
                 mLocation.getY(),
                 paint);
+        mBoundingBox.draw(canvas, paint);
     }
 
     public BoundingBox getBoundingBox()

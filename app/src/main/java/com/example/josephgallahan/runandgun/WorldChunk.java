@@ -19,10 +19,15 @@ public class WorldChunk
     private GroundBlock mGround;
     private ArrayList<Obstacle> mObstacles;
     private boolean mVisible;
+    private boolean mUnderPlayer;
 
     public WorldChunk(Context context, boolean isVisible)
     {
         mVisible = isVisible;
+        mUnderPlayer = false;
+
+        if(isVisible)
+            mUnderPlayer = true;
 
         mGround = new GroundBlock(context, isVisible);
 
@@ -40,17 +45,21 @@ public class WorldChunk
         for (int i = 0; i < 3; i++)
         {
             float yea = r.nextFloat();
-            if (yea <= 0.3333f)
+            if (yea <= 0.25f)
             {
                 mObstacles.add(new Spike(World.getInstance().getContext(), getGround()));
             }
-            else if (yea <= 0.6666f)
+            else if (yea <= 0.50f)
             {
                 mObstacles.add(new Block(World.getInstance().getContext(), getGround()));
             }
-            else
+            else if (yea <= 0.75f)
             {
                 mObstacles.add(new Lava(World.getInstance().getContext(), getGround()));
+            }
+            else
+            {
+                mObstacles.add(new Platform(World.getInstance().getContext(), getGround()));
             }
         }
     }
@@ -59,6 +68,8 @@ public class WorldChunk
     {
         return mVisible;
     }
+
+    public boolean isUnderPlayer(){return mUnderPlayer;}
 
     public void update()
     {
@@ -74,11 +85,20 @@ public class WorldChunk
             mVisible = true;
             addObstacles();
         }
-        if (mGround.getX() + mGround.getImage().getWidth() <= 0)
+        if (mGround.getX() + mGround.getImage().getWidth() <= -10)
         {
             mVisible = false;
             setX(mGround.getImage().getWidth() * 2);
             mObstacles.clear();
+        }
+
+        if (mGround.getX() <= 50)
+        {
+            mUnderPlayer = true;
+        }
+        if (mGround.getX() + mGround.getImage().getWidth() < 50)
+        {
+            mUnderPlayer = false;
         }
     }
 
@@ -93,6 +113,8 @@ public class WorldChunk
         {
             mObstacles.get(i).draw(canvas, paint);
         }
+
+        mGround.getBoundingBox().draw(canvas, paint);
     }
 
     public GroundBlock getGround()

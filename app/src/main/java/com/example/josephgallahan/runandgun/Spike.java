@@ -17,6 +17,7 @@ public class Spike extends Obstacle
         setImage(R.drawable.obstacle_spike);
         setSpawnZone(block.getLocation());
         spawn();
+        mIsGood = false;
     }
 
     protected void spawn()
@@ -28,7 +29,7 @@ public class Spike extends Obstacle
 
         setLocation(new Vector2d(x,y));
 
-        mBoundingBox = new BoundingBox(mImage.getWidth(), mImage.getHeight(), mLocation);
+        mBoundingBox = new BoundingBox(mContext, mImage.getWidth(), mImage.getHeight(), mLocation);
     }
     protected void update()
     {

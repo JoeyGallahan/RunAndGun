@@ -33,7 +33,7 @@ public class GroundBlock
         mImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.ground_block);
         mScaledBitmap = Bitmap.createScaledBitmap(mImage, mWidth, mHeight, true);
 
-        mBoundingBox = new BoundingBox(mWidth, mHeight, mLocation);
+        mBoundingBox = new BoundingBox(context, mWidth, mHeight, mLocation);
     }
 
     //Accessors

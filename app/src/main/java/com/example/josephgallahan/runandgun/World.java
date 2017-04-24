@@ -20,7 +20,7 @@ public class World
     private Context mContext;
     private ArrayList<Enemy> mEnemies;
 
-    private int mSpeed = -10;
+    private int mSpeed = -30;
 
     public static synchronized World getInstance()
     {
@@ -119,8 +119,9 @@ public class World
     {
         for (int i = 0; i < 3; i++)
         {
-            if (mWorldChunks[i].isVisible())
+            if (mWorldChunks[i].isUnderPlayer())
             {
+                Log.d("Visible ground", String.valueOf(i));
                 return mWorldChunks[i].getGround();
             }
         }
@@ -138,7 +139,7 @@ public class World
     {
         for (int i = 0; i < 3; i++)
         {
-            if (mWorldChunks[i].isVisible())
+            if (mWorldChunks[i].isUnderPlayer())
                return mWorldChunks[i].getObstacles().size();
         }
         return 0;
@@ -148,7 +149,7 @@ public class World
     {
         for (int i = 0; i < 3; i++)
         {
-            if (mWorldChunks[i].isVisible())
+            if (mWorldChunks[i].isUnderPlayer())
                 return mWorldChunks[i].getObstacles();
         }
         return null;

@@ -25,7 +25,7 @@ public class Enemy
     {
         mImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy);
         mLocation = new Vector2d(World.getInstance().getWidth(), World.getInstance().getGround().getY() - mImage.getHeight());
-        mBoundingBox = new BoundingBox(mImage.getWidth(), mImage.getHeight(), mLocation);
+        mBoundingBox = new BoundingBox(context, mImage.getWidth(), mImage.getHeight(), mLocation);
     }
 
     //Accessors
@@ -60,5 +60,7 @@ public class Enemy
                 mLocation.getX(),
                 mLocation.getY(),
                 paint);
+
+        mBoundingBox.draw(canvas, paint);
     }
 }

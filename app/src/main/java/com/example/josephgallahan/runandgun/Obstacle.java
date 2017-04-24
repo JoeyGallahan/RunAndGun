@@ -18,6 +18,7 @@ public abstract class Obstacle
     protected Context mContext;
     protected BoundingBox mBoundingBox;
     protected Vector2d mSpawnZone;
+    protected boolean mIsGood;
 
     public Obstacle(){}
 
@@ -39,10 +40,14 @@ public abstract class Obstacle
                 mLocation.getX(),
                 mLocation.getY(),
                 paint);
+
+        mBoundingBox.draw(canvas, paint);
     }
 
     public BoundingBox getBoundingBox()
     {
         return mBoundingBox;
     }
+
+    public boolean isGood(){return mIsGood;}
 }

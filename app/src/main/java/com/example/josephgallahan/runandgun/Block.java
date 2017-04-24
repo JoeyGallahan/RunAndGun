@@ -18,6 +18,7 @@ public class Block extends Obstacle
         setImage(R.drawable.obstacle_block);
         setSpawnZone(block.getLocation());
         spawn();
+        mIsGood = true;
     }
 
     protected void spawn()
@@ -29,20 +30,11 @@ public class Block extends Obstacle
 
         setLocation(new Vector2d(x,y));
 
-        mBoundingBox = new BoundingBox(mImage.getWidth(), mImage.getHeight(), mLocation);
+        mBoundingBox = new BoundingBox(World.getInstance().getContext(),mImage.getWidth(), mImage.getHeight(), mLocation);
     }
     protected void update()
     {
         mLocation.add(World.getInstance().getSpeed(), 0.0f);
         mBoundingBox.updateBox(mLocation);
-
-        if (mBoundingBox.canCollide())
-        {
-            setImage(R.drawable.obstacle_block_collidable);
-        }
-        else
-        {
-            setImage(R.drawable.obstacle_block);
-        }
     }
 }

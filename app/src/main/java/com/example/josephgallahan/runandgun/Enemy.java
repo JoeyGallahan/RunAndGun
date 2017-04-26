@@ -19,13 +19,15 @@ public class Enemy
 
     //Movement
     Vector2d mLocation;
-    final float mSpeed = 20.0f;
+    final float mSpeed;
 
     public Enemy(Context context)
     {
         mImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy);
         mLocation = new Vector2d(World.getInstance().getWidth(), World.getInstance().getGround().getY() - mImage.getHeight());
         mBoundingBox = new BoundingBox(context, mImage.getWidth(), mImage.getHeight(), mLocation);
+
+       mSpeed = World.getInstance().getSpeed() + 10.0f;
     }
 
     //Accessors
@@ -50,7 +52,7 @@ public class Enemy
     //Gameplay
     public void update()
     {
-        mLocation.sub(mSpeed, 0.0f);
+        mLocation.add(mSpeed, 0.0f);
         mBoundingBox.updateBox(mLocation);
     }
 

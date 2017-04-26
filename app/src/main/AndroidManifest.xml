@@ -15,8 +15,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".MainActivity"
             android:screenOrientation="landscape">
+        </activity>
+
+        <activity android:name=".HighscoresActivity"
+                  android:screenOrientation="landscape">
+        </activity>
+
+        <activity android:name=".GameOverActivity"
+                  android:screenOrientation="landscape">
         </activity>
     </application>
 

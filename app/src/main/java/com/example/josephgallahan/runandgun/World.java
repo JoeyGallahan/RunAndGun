@@ -2,6 +2,7 @@ package com.example.josephgallahan.runandgun;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.Log;
@@ -19,8 +20,11 @@ public class World
     private static World mInstace = null;
     private Context mContext;
     private ArrayList<Enemy> mEnemies;
+    private boolean playerDead = false;
 
     private int mSpeed = -30;
+
+    private int mScore = 0;
 
     public static synchronized World getInstance()
     {
@@ -49,9 +53,8 @@ public class World
     {
         return ((Activity)mContext).getWindowManager().getDefaultDisplay().getWidth();
     }
-    public int getHeight()
-    {
-        return ((Activity)mContext).getWindowManager().getDefaultDisplay().getHeight();
+    public int getHeight() {
+        return ((Activity) mContext).getWindowManager().getDefaultDisplay().getHeight();
     }
 
     public void init()
@@ -80,6 +83,17 @@ public class World
         mEnemies.add(new Enemy(mContext));
     }
 
+    public void setSpeed(int speed)
+    {
+        mSpeed = speed;
+    }
+
+    public void setPlayerDead(boolean dead, int score)
+    {
+        playerDead = dead;
+        mScore = score;
+    }
+
     public void update()
     {
         for (int i = 0; i < 3; i++)
@@ -102,6 +116,20 @@ public class World
 
     public void draw(Canvas canvas, Paint paint)
     {
+        if (playerDead && paint.getAlpha() > 0)
+        {
+            paint.setAlpha(paint.getAlpha() - 2);
+            Log.d("Paint ALpha", Integer.toString(paint.getAlpha()));
+
+            if (paint.getAlpha() <= 2)
+            {
+                Intent i = GameOverActivity.newIntent(getContext(), mScore);
+                setPlayerDead(false, 0);
+                mSpeed = -30;
+                getContext().startActivity(i);
+            }
+        }
+
         for (int i = 0; i < 3; i++)
         {
             if (mWorldChunks[i].isVisible())

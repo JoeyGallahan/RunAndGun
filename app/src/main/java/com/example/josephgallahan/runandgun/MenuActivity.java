@@ -31,6 +31,7 @@ public class MenuActivity extends AppCompatActivity
             public void onClick(View v)
             {
                 Intent i = MainActivity.newIntent(MenuActivity.this);
+                recreate();
                 startActivity(i);
             }
         });
@@ -40,8 +41,8 @@ public class MenuActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                //Intent i = QuizActivity.newIntent(MenuActivity.this, 2);
-                //startActivity(i);
+                Intent i = HighscoresActivity.newIntent(MenuActivity.this);
+                startActivity(i);
             }
         });
 
@@ -50,9 +51,14 @@ public class MenuActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                //Intent i = QuizActivity.newIntent(MenuActivity.this, 3);
-                //startActivity(i);
+                System.exit(0);
             }
         });
+    }
+
+    public static Intent newIntent(Context packageContext)
+    {
+        Intent i = new Intent(packageContext, MenuActivity.class);
+        return i;
     }
 }

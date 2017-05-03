@@ -20,17 +20,6 @@ public class Spike extends Obstacle
         mIsGood = false;
     }
 
-    protected void spawn()
-    {
-        Random r = new Random();
-
-        int x = r.nextInt(World.getInstance().getWidth())+ (int)mSpawnZone.getX() + 50;
-        float y = World.getInstance().getGround().getY() - mImage.getHeight();
-
-        setLocation(new Vector2d(x,y));
-
-        mBoundingBox = new BoundingBox(mContext, mImage.getWidth(), mImage.getHeight(), mLocation);
-    }
     protected void update()
     {
         mLocation.add(World.getInstance().getSpeed(), 0.0f);

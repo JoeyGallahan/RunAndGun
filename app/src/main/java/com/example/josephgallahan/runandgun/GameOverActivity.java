@@ -2,6 +2,7 @@ package com.example.josephgallahan.runandgun;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -47,6 +48,7 @@ public class GameOverActivity extends AppCompatActivity {
             {
                 Intent i = MenuActivity.newIntent(GameOverActivity.this);
                 startActivity(i);
+                finish();
             }
         });
 
@@ -128,7 +130,7 @@ public class GameOverActivity extends AppCompatActivity {
         ArrayList<Integer> highscores = new ArrayList<>();
         for (int i = 0; i < output.length(); i++)
         {
-            if (output.charAt(i) != ',' && i != output.length() - 1)
+            if (output.charAt(i) != ',')
             {
                 tempScore += output.charAt(i);
             }
@@ -143,7 +145,7 @@ public class GameOverActivity extends AppCompatActivity {
 
         try
         {
-            OutputStreamWriter outputStream = new OutputStreamWriter(openFileOutput(mFileName, MODE_APPEND));
+            OutputStreamWriter outputStream = new OutputStreamWriter(openFileOutput(mFileName, 0));
             outputStream.flush();
             String temp = "";
 
@@ -155,7 +157,7 @@ public class GameOverActivity extends AppCompatActivity {
 
             for (int i = 0; i < size; i++)
             {
-                temp = String.valueOf(highscores.get(i)) + ",";
+                temp = highscores.get(i) + ",";
                 outputStream.append(temp);
             }
 

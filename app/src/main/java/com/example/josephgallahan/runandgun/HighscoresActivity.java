@@ -28,7 +28,8 @@ public class HighscoresActivity extends AppCompatActivity
     private String mFileName = "highscores.txt";
     private String mAllScores = "";
 
-    private ArrayList<Integer> mScores;
+    private ArrayList<String> mScores;
+    private ArrayList<TextView> mTextViews;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,7 @@ public class HighscoresActivity extends AppCompatActivity
             {
                 Intent i = MenuActivity.newIntent(HighscoresActivity.this);
                 startActivity(i);
+                finish();
             }
         });
 
@@ -51,9 +53,19 @@ public class HighscoresActivity extends AppCompatActivity
         mSecondPlace = (TextView) findViewById(R.id.second_place);
         mThirdPlace = (TextView) findViewById(R.id.third_place);
 
+        mTextViews = new ArrayList<>();
+        mTextViews.add(mFirstPlace);
+        mTextViews.add(mSecondPlace);
+        mTextViews.add(mThirdPlace);
+
         mScores = new ArrayList<>();
 
         loadScores();
+
+        for (int i = 0; i < mScores.size(); i++)
+        {
+            mTextViews.get(i).setText(mScores.get(i));
+        }
     }
 
     public static Intent newIntent(Context packageContext)
@@ -80,6 +92,7 @@ public class HighscoresActivity extends AppCompatActivity
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
                 String receiveString = "";
                 StringBuilder stringBuilder = new StringBuilder();
+
                 while ( (receiveString = bufferedReader.readLine()) != null )
                 {
                     stringBuilder.append(receiveString);
@@ -99,5 +112,25 @@ public class HighscoresActivity extends AppCompatActivity
         }
 
         mAllScores = output;
+
+        String tempScore = "";
+        int numScores = 0;
+        for (int i = 0; i < mAllScores.length(); i++)
+        {
+            if (output.charAt(i) != ',')
+            {
+                tempScore += mAllScores.charAt(i);
+            }
+            else if (numScores < 3)
+            {
+                mScores.add(tempScore);
+                tempScore = "";
+                numScores++;
+            }
+            else
+            {
+                break;
+            }
+        }
     }
 }

@@ -23,7 +23,6 @@ public class MenuActivity extends AppCompatActivity
 
         mPlayButton = (Button) findViewById(R.id.playButton);
         mHighScoresButton = (Button) findViewById(R.id.highScoresButton);
-        mQuitButton = (Button) findViewById(R.id.quitButton);
 
         mPlayButton.setOnClickListener(new View.OnClickListener()
         {
@@ -31,7 +30,6 @@ public class MenuActivity extends AppCompatActivity
             public void onClick(View v)
             {
                 Intent i = MainActivity.newIntent(MenuActivity.this);
-                recreate();
                 startActivity(i);
             }
         });
@@ -43,15 +41,6 @@ public class MenuActivity extends AppCompatActivity
             {
                 Intent i = HighscoresActivity.newIntent(MenuActivity.this);
                 startActivity(i);
-            }
-        });
-
-        mQuitButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                System.exit(0);
             }
         });
     }

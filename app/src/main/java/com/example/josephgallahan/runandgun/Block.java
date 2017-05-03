@@ -21,17 +21,6 @@ public class Block extends Obstacle
         mIsGood = true;
     }
 
-    protected void spawn()
-    {
-        Random r = new Random();
-
-        int x = r.nextInt(World.getInstance().getWidth())+ (int)mSpawnZone.getX() + 50;
-        float y = World.getInstance().getGround().getY() - mImage.getHeight();
-
-        setLocation(new Vector2d(x,y));
-
-        mBoundingBox = new BoundingBox(World.getInstance().getContext(),mImage.getWidth(), mImage.getHeight(), mLocation);
-    }
     protected void update()
     {
         mLocation.add(World.getInstance().getSpeed(), 0.0f);

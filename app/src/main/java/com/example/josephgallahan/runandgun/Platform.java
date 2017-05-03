@@ -23,7 +23,7 @@ public class Platform extends Obstacle
     {
         Random r = new Random();
 
-        int x = r.nextInt(World.getInstance().getWidth())+ (int)mSpawnZone.getX() + 50;
+        int x = r.nextInt(World.getInstance().getWidth())+ (int)mSpawnZone.getX();
         float y = World.getInstance().getHeight() / 2 - mImage.getHeight();
 
         setLocation(new Vector2d(x,y));

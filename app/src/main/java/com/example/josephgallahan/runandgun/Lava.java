@@ -21,13 +21,16 @@ public class Lava extends Obstacle
     protected void spawn()
     {
         Random r = new Random();
+        do
+        {
+            int x = r.nextInt(World.getInstance().getWidth())+ (int)mSpawnZone.getX();;
+            float y = World.getInstance().getGround().getY();
 
-        int x = r.nextInt(World.getInstance().getWidth())+ (int)mSpawnZone.getX() + 50;
-        float y = World.getInstance().getGround().getY();
+            setLocation(new Vector2d(x,y));
 
-        setLocation(new Vector2d(x,y));
-
-        mBoundingBox = new BoundingBox(World.getInstance().getContext(),mImage.getWidth(), mImage.getHeight(), mLocation);
+            mBoundingBox = new BoundingBox(World.getInstance().getContext(),mImage.getWidth(), mImage.getHeight(), mLocation);
+        }
+        while(mBoundingBox.checkCollision(World.getInstance().getVisibleObstacles()));
     }
     protected void update()
     {

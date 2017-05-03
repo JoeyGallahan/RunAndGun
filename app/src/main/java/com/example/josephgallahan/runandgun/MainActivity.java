@@ -2,6 +2,8 @@ package com.example.josephgallahan.runandgun;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -21,6 +23,9 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         mGameView = new GameView(this);
         setContentView(mGameView);
+
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        World.getInstance().startMusic();
     }
 
     @Override

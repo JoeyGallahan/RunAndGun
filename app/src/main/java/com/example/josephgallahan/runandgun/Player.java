@@ -22,7 +22,7 @@ public class Player
 
     //Movement
     Vector2d mLocation;
-    final float mSpeed = -50.0f, mGravity = 10.0f;
+    final float mSpeed = -55.0f, mGravity = 10.0f;
     float mVel = 0.0f;
     int mWidth, mHeight;
 
@@ -43,7 +43,6 @@ public class Player
     //Death stuff
     boolean dead = false;
     int deadFrames = 4;
-    int frameWidth = 80, frameHeight = 80;
     int frameLength = 3;
     int framesSinceChange = 0;
     int curFrame = 0;
@@ -112,12 +111,8 @@ public class Player
         {
             bullet = new Bullet(mLocation.getX() + mWidth / 2, mLocation.getY() + mHeight / 2, !mCanSlide);
             mCanShoot = false;
+            World.getInstance().bulletsound();
         }
-    }
-
-    public boolean isDead()
-    {
-        return dead;
     }
 
     private void killPlayer()
@@ -187,12 +182,27 @@ public class Player
                 if (mBoundingBox.checkCollision(World.getInstance().getVisibleObstacles().get(i).getBoundingBox()))
                 {
                     collidedWithObstacle = true;
-                    //Log.d("Collision", String.valueOf(i));
                     mVel = 0.0f;
                     mIsJumping = false;
 
-                    if (World.getInstance().getVisibleObstacles().get(i).isGood())
-                        goodCollision = true;
+                    if (!World.getInstance().getVisibleObstacles().get(i).isGood())
+                    {
+                        killPlayer();
+                        dead = true;
+                        World.getInstance().setSpeed(0);
+                        World.getInstance().setPlayerDead(true, mScore);
+                    }
+                }
+            }
+
+            if ( !World.getInstance().getEnemies().isEmpty())
+            {
+                if (mBoundingBox.checkCollision(World.getInstance().getEnemies().get(0).getBoundingBox()))
+                {
+                    killPlayer();
+                    dead = true;
+                    World.getInstance().setSpeed(0);
+                    World.getInstance().setPlayerDead(true, mScore);
                 }
             }
 
@@ -242,6 +252,7 @@ public class Player
                             mDrawStyle = bullet.wasSlideShot();
                             bullet = null;
                             World.getInstance().getEnemies().remove(0);
+                            World.getInstance().enemyHitSound();
 
                             if (!mDrawStyle)
                                 mScore += 50;
@@ -272,22 +283,6 @@ public class Player
 
         if (!dead)
         {
-            if ( !World.getInstance().getEnemies().isEmpty())
-            {
-                if (mBoundingBox.checkCollision(World.getInstance().getEnemies().get(0).getBoundingBox())) {
-                    canvas.drawText("R.I.P. Enemy Killed you", World.getInstance().getWidth() / 2.0f, 100.0f, paint);
-                    killPlayer();
-                    dead = true;
-                    World.getInstance().setSpeed(0);
-                    World.getInstance().setPlayerDead(true, mScore);
-                }
-            }
-
-            if (collidedWithObstacle && !goodCollision)
-            {
-                canvas.drawText("R.I.P. Obstacle killed you", World.getInstance().getWidth() / 2.0f, 200.0f, paint);
-            }
-
             if (bullet != null)
                 bullet.draw(canvas, paint);
 

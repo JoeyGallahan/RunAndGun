@@ -8,6 +8,8 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 
+import java.util.Random;
+
 /**
  * Created by joseph.gallahan on 2/20/2017.
  */
@@ -31,7 +33,21 @@ public abstract class Obstacle
     public void setLocation(Vector2d loc) {mLocation = loc;}
     public void setSpawnZone(Vector2d loc) {mSpawnZone = loc;}
 
-    protected abstract void spawn();
+    protected void spawn()
+    {
+        Random r = new Random();
+        do
+        {
+            int x = r.nextInt(World.getInstance().getWidth())+ (int)mSpawnZone.getX();;
+            float y = World.getInstance().getGround().getY() - mImage.getHeight();
+
+            setLocation(new Vector2d(x,y));
+
+            mBoundingBox = new BoundingBox(World.getInstance().getContext(),mImage.getWidth(), mImage.getHeight(), mLocation);
+        }
+        while(mBoundingBox.checkCollision(World.getInstance().getVisibleObstacles()));
+    }
+
     protected abstract void update();
 
     public void draw(Canvas canvas, Paint paint)

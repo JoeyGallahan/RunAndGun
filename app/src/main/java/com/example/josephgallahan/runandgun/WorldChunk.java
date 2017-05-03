@@ -1,6 +1,8 @@
 package com.example.josephgallahan.runandgun;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
@@ -20,11 +22,13 @@ public class WorldChunk
     private ArrayList<Obstacle> mObstacles;
     private boolean mVisible;
     private boolean mUnderPlayer;
+    private boolean mCanSpawn;
 
     public WorldChunk(Context context, boolean isVisible)
     {
         mVisible = isVisible;
         mUnderPlayer = false;
+        mCanSpawn = !mVisible;
 
         if(isVisible)
             mUnderPlayer = true;
@@ -38,6 +42,8 @@ public class WorldChunk
     {
         return mObstacles;
     }
+
+    public boolean canSpawn(){return mCanSpawn;}
 
     public void addObstacles()
     {
@@ -89,6 +95,7 @@ public class WorldChunk
         {
             mVisible = false;
             setX(mGround.getImage().getWidth() * 2);
+            mCanSpawn = true;
             mObstacles.clear();
         }
 
